@@ -1,26 +1,177 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonBudget - Gestionnaire de Budget</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Si tu as un fichier CSS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionnaire de Budget Personnel</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #2a9d8f;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #264653;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e76f51;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #f4a261;
+    }
+    .result, .chart-container {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background-color: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    canvas {
+      max-width: 500px;
+      margin: auto;
+    }
+    .images-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .images-container img {
+      margin: 0 10px;
+      max-width: 200px;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Bienvenue sur MonBudget!</h1>
-        <p>Ce site vous aide à gérer votre budget facilement.</p>
-    </header>
-    
-    <main>
-        <section>
-            <h2>À propos</h2>
-            <p>MonBudget est une application pour suivre vos finances personnelles.</p>
-        </section>
-    </main>
-    
-    <footer>
-        <p>&copy; 2025 MonBudget - Tous droits réservés</p>
-    </footer>
+  <h1>Gestionnaire de Budget Personnel</h1>
+  <h2>Analysez vos revenus, vos dépenses et vos priorités</h2>
+  
+  <!-- Ajout des images -->
+
+  <div style="text-align: center;">
+ <img width="627px" height="400px" src="https://profitentiel.fr/wp-content/uploads/2023/12/maitriser-vos-finances-guide-complet-des-formalites-pour-une-gestion-efficace-1.jpg" alt="Budget Image 1">
+   
+  </div>
+
+  <form id="budget-form">
+    <label for="revenus">Revenus mensuels (€)</label>
+    <input type="number" id="revenus" value="2500">
+
+    <label for="logement">Dépenses de logement (€)</label>
+    <input type="number" id="logement" value="800">
+
+    <label for="nourriture">Dépenses de nourriture (€)</label>
+    <input type="number" id="nourriture" value="300">
+
+    <label for="transport">Dépenses de transport (€)</label>
+    <input type="number" id="transport" value="150">
+
+    <label for="sante">Dépenses de santé (€)</label>
+    <input type="number" id="sante" value="100">
+
+    <label for="loisirs">Dépenses de loisirs (€)</label>
+    <input type="number" id="loisirs" value="50">
+
+    <label for="coiffeur">Dépenses de coiffeur (€)</label>
+    <input type="number" id="coiffeur" value="30">
+
+    <label for="manucure">Dépenses de manucure (€)</label>
+    <input type="number" id="manucure" value="20">
+
+    <label for="habille">Dépenses d'habillement (€)</label>
+    <input type="number" id="habille" value="50">
+
+    <label for="chaussures">Dépenses de chaussures (€)</label>
+    <input type="number" id="chaussures" value="40">
+
+    <button type="button" onclick="calculerBudget()">Calculer mon budget</button>
+  </form>
+
+  <div class="result" id="result">
+    <p><strong>Dépenses totales :</strong> 0.00€</p>
+    <p><strong>Épargne possible :</strong> 0.00€</p>
+    <p><strong>Catégorie la plus coûteuse :</strong> -</p>
+  </div>
+
+  <div class="chart-container">
+    <h3>Répartition des dépenses</h3>
+    <canvas id="pieChart"></canvas>
+    <h3>Comparaison des catégories</h3>
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <button onclick="window.location.href='liens-bancaires-cryptomonnaies.html'">Page suivante</button>
+
+  <script>
+    function calculerBudget() {
+      const revenus = parseFloat(document.getElementById('revenus').value) || 0;
+      const logement = parseFloat(document.getElementById('logement').value) || 0;
+      const nourriture = parseFloat(document.getElementById('nourriture').value) || 0;
+      const transport = parseFloat(document.getElementById('transport').value) || 0;
+      const sante = parseFloat(document.getElementById('sante').value) || 0;
+      const loisirs = parseFloat(document.getElementById('loisirs').value) || 0;
+      const coiffeur = parseFloat(document.getElementById('coiffeur').value) || 0;
+      const manucure = parseFloat(document.getElementById('manucure').value) || 0;
+      const habille = parseFloat(document.getElementById('habille').value) || 0;
+      const chaussures = parseFloat(document.getElementById('chaussures').value) || 0;
+
+      const totalDepenses = logement + nourriture + transport + sante + loisirs + coiffeur + manucure + habille + chaussures;
+      const epargnePossible = revenus - totalDepenses;
+
+      document.getElementById('result').innerHTML = `
+        <p><strong>Dépenses totales :</strong> ${totalDepenses.toFixed(2)}€</p>
+        <p><strong>Épargne possible :</strong> ${epargnePossible.toFixed(2)}€</p>
+      `;
+
+      const categories = ['Logement', 'Nourriture', 'Transport', 'Santé', 'Loisirs', 'Coiffeur', 'Manucure', 'Habillement', 'Chaussures'];
+      const data = [logement, nourriture, transport, sante, loisirs, coiffeur, manucure, habille, chaussures];
+      const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#8BC34A', '#FFA07A', '#8A2BE2', '#40E0D0'];
+
+      new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: { labels: categories, datasets: [{ data, backgroundColor: colors }] },
+      });
+
+      new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: { labels: categories, datasets: [{ label: 'Dépenses (€)', data, backgroundColor: colors }] },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    }
+  </script>
 </body>
-</html>
+<ul>
+    <li><a href="solution-endettement.html">Solution Endettement</a></li>
+    <li><a href="placements-cryptomonnaies.html">Placements Cryptomonnaies</a></li>
+    <li><a href="meilleurs-banques.html">Meilleurs Banques</a></li>
+    <li><a href="inscription-cryptomonnaie.html">Inscription Cryptomonnaie</a></li>
+    <li><a href="inscription-banques.html">Inscription Banques</a></li>
+    <li><a href="solution-endettement.html">solution endettement</a></li>
+    <li><a href="bonus-cryptomonnaies.html">Bonus Cryptomonnaies</a></li>
+    <li><a href="bonus-bancaires.html">Bonus Bancaires</a></li>
+</ul>
